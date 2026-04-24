@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import {
   SearchOutlined,
   UserOutlined,
@@ -54,9 +55,9 @@ const Header = () => {
         <div className="container">
           <div className="header-main-inner">
             {/* Logo */}
-            <a href="/" className="header-logo">
+            <Link to="/" className="header-logo">
               <span className="logo-text">WORKSPACE</span>
-            </a>
+            </Link>
 
             {/* Desktop search */}
             <div className={`header-search ${searchOpen ? 'active' : ''}`}>

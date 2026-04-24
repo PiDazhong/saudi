@@ -1,0 +1,118 @@
+.upload-page {
+  min-height: 80vh;
+  padding: 40px 0 80px;
+  background-color: #f8f9fa;
+
+  .section-title {
+    font-size: 32px;
+    font-weight: 700;
+    color: #1d1d1d;
+    margin-bottom: 32px;
+    text-align: center;
+  }
+
+  .upload-tabs {
+    .ant-tabs-nav {
+      margin-bottom: 24px;
+    }
+
+    .ant-tabs-tab {
+      font-size: 15px;
+      font-weight: 500;
+    }
+  }
+}
+
+.module-upload-manager {
+  background: #fff;
+  padding: 24px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+
+  .upload-section {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+
+    .upload-tip {
+      color: #888;
+      font-size: 13px;
+    }
+  }
+
+  .section-subtitle {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1d1d1d;
+    margin-bottom: 16px;
+  }
+
+  .file-list {
+    .file-card {
+      border: 1px solid #e3e3e3;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #fff;
+      transition: box-shadow 0.2s;
+
+      &:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      }
+
+      .file-preview {
+        width: 100%;
+        height: 160px;
+        background: #f5f5f5;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+      }
+
+      .file-info {
+        padding: 12px;
+
+        .file-name {
+          display: block;
+          font-size: 13px;
+          color: #484848;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          margin-bottom: 8px;
+        }
+
+        .file-actions {
+          display: flex;
+          justify-content: space-between;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .upload-page {
+    padding: 24px 0 40px;
+
+    .section-title {
+      font-size: 24px;
+    }
+  }
+
+  .module-upload-manager {
+    padding: 16px;
+
+    .upload-section {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+}

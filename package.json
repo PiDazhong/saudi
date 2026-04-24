@@ -11,10 +11,11 @@
   },
   "dependencies": {
     "antd": "^6.3.6",
+    "archiver": "^7.0.1",
     "less": "^4.6.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "archiver": "^7.0.1",
+    "react-router-dom": "^7.14.2",
     "ssh2": "^1.15.0",
     "uuid": "^10.0.0",
     "xlsx": "^0.18.5"
