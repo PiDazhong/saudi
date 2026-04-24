@@ -1,0 +1,18 @@
+/* Global Styles - aligned with workspace.ae */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Raleway', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: rgb(72, 72, 72);
+  background-color: #ffffff;
+}
+
+#root {
+  width: 100%;
+}

@@ -1,0 +1,60 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.app {
+  width: 100%;
+  min-height: 100vh;
+  font-family: 'Raleway', sans-serif;
+  color: rgb(72, 72, 72);
+  background-color: #ffffff;
+}
+
+/* Global scroll behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Common container style */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* Section title style */
+.section-title {
+  font-size: 32px;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 48px;
+  color: rgb(72, 72, 72);
+}
+
+/* Primary button style */
+.btn-primary {
+  display: inline-block;
+  padding: 12px 32px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #ffffff;
+  background-color: #ff4c4c;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+
+  &:hover {
+    background-color: #e04343;
+  }
+}
+
+/* Responsive section title */
+@media (max-width: 768px) {
+  .section-title {
+    font-size: 24px;
+  }
+}
