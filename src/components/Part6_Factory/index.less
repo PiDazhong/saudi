@@ -10,13 +10,13 @@
   .factory-section {
     display: flex;
     align-items: center;
-    gap: 48px;
 
     .factory-text {
-      flex: 1;
+      flex: 0 0 40%;
       display: flex;
       flex-direction: column;
       gap: 20px;
+      padding-right: 48px;
 
       .factory-title {
         font-size: 32px;
@@ -56,13 +56,59 @@
     }
 
     .factory-image-wrapper {
-      flex: 1;
+      flex: 0 0 60%;
+      min-width: 0;
+      max-height: 380px;
+      overflow: hidden;
+
+      .ant-carousel {
+        width: 100%;
+        max-height: 380px;
+
+        .slick-list,
+        .slick-track,
+        .slick-slide,
+        .slick-slide > div {
+          max-height: 380px;
+        }
+
+        .slick-slide .factory-image {
+          transition: transform 0.6s ease, opacity 0.5s ease;
+          transform: perspective(1200px) rotateY(-90deg);
+          transform-origin: left center;
+          opacity: 0;
+        }
+
+        .slick-slide.slick-active .factory-image {
+          transform: perspective(1200px) rotateY(0deg);
+          opacity: 1;
+        }
+
+        .slick-dots li button {
+          background: #ffffff;
+          opacity: 0.6;
+        }
+
+        .slick-dots li.slick-active button {
+          background: #ffffff;
+          opacity: 1;
+        }
+      }
+
+      .carousel-slide {
+        width: 100%;
+        height: 100%;
+      }
 
       .factory-image {
         width: 100%;
-        aspect-ratio: 16 / 10;
+        height: 100%;
+        max-width: 100%;
+        max-height: 380px;
         background: #e8e8e8;
         border-radius: 4px;
+        object-fit: cover;
+        display: block;
       }
     }
   }

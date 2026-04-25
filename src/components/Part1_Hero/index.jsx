@@ -1,27 +1,13 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from 'antd';
-import { ArrowRightOutlined, MenuOutlined, CloseOutlined } from '@ant-design/icons';
+import { ArrowRightOutlined } from '@ant-design/icons';
 import { API_BASE_URL, API_ENDPOINTS } from '../../config/uploadModules';
 import './index.less';
 
 const Part1Hero = () => {
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  const mainMenu = [
-    { label: 'Chairs', href: '#' },
-    { label: 'Desks', href: '#', hasSubmenu: true },
-    { label: 'Workstations', href: '#' },
-    { label: 'Meeting Tables', href: '#' },
-    { label: 'Accessories', href: '#' },
-    { label: 'Contact', href: '#contact-form' },
-  ];
-
-  const toggleMobileMenu = () => {
-    setMobileMenuOpen(!mobileMenuOpen);
-  };
 
   const fetchImages = useCallback(async () => {
     setLoading(true);
@@ -81,28 +67,7 @@ const Part1Hero = () => {
           <Link to="/" className="header-logo">
             <img src="/damons.png" alt="Damons" className="logo-img" />
           </Link>
-          <div className="header-actions">
-            <button
-              className="action-btn mobile-menu-toggle"
-              onClick={toggleMobileMenu}
-              aria-label="Toggle menu"
-            >
-              {mobileMenuOpen ? <CloseOutlined /> : <MenuOutlined />}
-            </button>
-          </div>
         </div>
-      </div>
-
-      <div className={`mobile-menu ${mobileMenuOpen ? 'open' : ''}`}>
-        <ul className="mobile-menu-list">
-          {mainMenu.map((item) => (
-            <li key={item.label} className="mobile-menu-item">
-              <a href={item.href} className="mobile-menu-link">
-                {item.label}
-              </a>
-            </li>
-          ))}
-        </ul>
       </div>
 
       <div className="hero-content">

@@ -3,9 +3,8 @@ import {
   PhoneOutlined,
   MailOutlined,
   EnvironmentOutlined,
-  TwitterOutlined,
-  InstagramOutlined,
 } from '@ant-design/icons';
+import SocialLinks from '../SocialLinks';
 import './index.less';
 
 const Footer = () => {
@@ -46,14 +45,7 @@ const Footer = () => {
                   <span>Dubai, United Arab Emirates</span>
                 </div>
               </div>
-              <div className="social-links">
-                <a href="#" className="social-link" aria-label="Twitter">
-                  <TwitterOutlined />
-                </a>
-                <a href="#" className="social-link" aria-label="Instagram">
-                  <InstagramOutlined />
-                </a>
-              </div>
+              <SocialLinks />
             </div>
           </div>
         </div>

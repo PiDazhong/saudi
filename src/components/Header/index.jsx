@@ -1,11 +1,14 @@
+import { useState } from 'react';
+import { MailOutlined, GlobalOutlined } from '@ant-design/icons';
+import SocialLinks from '../SocialLinks';
 import './index.less';
 
 const Header = () => {
-  const topLinks = [
-    { label: 'Showrooms', href: '#' },
-    { label: 'Material & Colors', href: '#' },
-    { label: 'Warranty', href: '#' },
-  ];
+  const [lang, setLang] = useState('en');
+
+  const toggleLang = () => {
+    setLang((prev) => (prev === 'en' ? 'ar' : 'en'));
+  };
 
   return (
     <header className="site-header">
@@ -13,13 +16,17 @@ const Header = () => {
       <div className="header-top-bar">
         <div className="container">
           <div className="top-bar-inner">
-            <nav className="top-nav">
-              {topLinks.map((link) => (
-                <a key={link.label} href={link.href} className="top-nav-link">
-                  {link.label}
-                </a>
-              ))}
-            </nav>
+            <SocialLinks />
+            <div className="top-bar-right">
+              <div className="lang-switch" onClick={toggleLang}>
+                <GlobalOutlined />
+                <span>{lang.toUpperCase()}</span>
+              </div>
+              <a href="#contact-form" className="top-bar-contact">
+                <MailOutlined />
+                <span>Contact Us</span>
+              </a>
+            </div>
           </div>
         </div>
       </div>

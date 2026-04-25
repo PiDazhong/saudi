@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { Carousel } from 'antd';
 import { API_BASE_URL, API_ENDPOINTS } from '../../config/uploadModules';
 import './index.less';
 
@@ -36,10 +37,6 @@ const Part6Factory = () => {
     return `${API_BASE_URL}/icons/factory/${filename}`;
   };
 
-  const firstImage = images[0]
-    ? (typeof images[0] === 'string' ? getFileUrl(images[0]) : images[0].url || getFileUrl(images[0].filename || images[0].name))
-    : null;
-
   return (
     <section className="part6-factory">
       <div className="factory-container">
@@ -58,8 +55,19 @@ const Part6Factory = () => {
             </a>
           </div>
           <div className="factory-image-wrapper">
-            {firstImage ? (
-              <img src={firstImage} alt="factory" className="factory-image" />
+            {images.length > 0 ? (
+              <Carousel autoplay>
+                {images.map((item, index) => {
+                  const url = typeof item === 'string'
+                    ? getFileUrl(item)
+                    : item.url || getFileUrl(item.filename || item.name);
+                  return (
+                    <div key={index} className="carousel-slide">
+                      <img src={url} alt={`factory-${index}`} className="factory-image" />
+                    </div>
+                  );
+                })}
+              </Carousel>
             ) : (
               <div className="factory-image" />
             )}

@@ -14,22 +14,66 @@
 
   .top-bar-inner {
     display: flex;
-    justify-content: flex-start;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
   }
 
-  .top-nav {
+  .top-bar-right {
     display: flex;
-    gap: 24px;
+    align-items: center;
+    gap: 16px;
   }
 
-  .top-nav-link {
+  .lang-switch {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 13px;
+    cursor: pointer;
+    transition: color 0.2s ease;
+    user-select: none;
+
+    &:hover {
+      color: #2e9bd5;
+    }
+  }
+
+  .top-bar-contact {
+    display: flex;
+    align-items: center;
+    gap: 6px;
     color: rgba(255, 255, 255, 0.85);
     font-size: 13px;
     text-decoration: none;
     transition: color 0.2s ease;
 
     &:hover {
-      color: #ffffff;
+      color: #2e9bd5;
+    }
+  }
+
+  .social-links {
+    gap: 10px;
+
+    .social-link {
+      width: 24px;
+      height: 24px;
+      font-size: 12px;
+      border-color: rgba(255, 255, 255, 0.3);
+      color: rgba(255, 255, 255, 0.85);
+
+      &:hover {
+        color: #ffffff;
+        border-color: #2e9bd5;
+        background: #2e9bd5;
+      }
+
+      svg {
+        width: 12px;
+        height: 12px;
+      }
     }
   }
 }
