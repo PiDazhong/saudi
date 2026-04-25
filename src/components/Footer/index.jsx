@@ -4,10 +4,12 @@ import {
   MailOutlined,
   EnvironmentOutlined,
 } from '@ant-design/icons';
+import { useTranslation } from '../../hooks/useTranslation';
 import SocialLinks from '../SocialLinks';
 import './index.less';
 
 const Footer = () => {
+  const { t } = useTranslation();
   return (
     <footer className="site-footer">
       {/* Main footer */}
@@ -16,33 +18,30 @@ const Footer = () => {
           <div className="footer-grid">
             {/* About */}
             <div className="footer-block">
-              <h5 className="footer-block-title">About us</h5>
+              <h5 className="footer-block-title">{t('aboutUs.title')}</h5>
               <div className="footer-block-content">
                 <img src="/damons-white.png" alt="Damons" className="footer-logo-img" />
                 <p className="footer-about-text">
-                  WORKSPACE is a leading, Dubai-based manufacturer, designer and supplier
-                  of modern office furniture. Committed to provide workplace furniture that
-                  delivers great value by combining modern design, dependable quality and
-                  exceptional service.
+                  {t('aboutUs.description')}
                 </p>
               </div>
             </div>
 
             {/* Contact */}
             <div className="footer-block">
-              <h5 className="footer-block-title">Contact</h5>
+              <h5 className="footer-block-title">{t('contact.title')}</h5>
               <div className="footer-contact-list">
                 <div className="footer-contact-item">
                   <PhoneOutlined className="footer-contact-icon" />
-                  <span>+971 4 123 4567</span>
+                  <span>{t('contact.phone')}</span>
                 </div>
                 <div className="footer-contact-item">
                   <MailOutlined className="footer-contact-icon" />
-                  <span>info@workspace.ae</span>
+                  <span>{t('contact.email')}</span>
                 </div>
                 <div className="footer-contact-item">
                   <EnvironmentOutlined className="footer-contact-icon" />
-                  <span>Dubai, United Arab Emirates</span>
+                  <span>{t('contact.address')}</span>
                 </div>
               </div>
               <SocialLinks />
@@ -54,7 +53,7 @@ const Footer = () => {
       {/* Copyright */}
       <div className="footer-copyright">
         <div className="container">
-          <p>© 2025 WORKSPACE. All rights reserved.</p>
+          <p>© 2026 DAMONS. All rights reserved.</p>
         </div>
       </div>
     </footer>

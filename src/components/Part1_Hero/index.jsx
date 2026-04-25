@@ -2,10 +2,12 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from 'antd';
 import { ArrowRightOutlined } from '@ant-design/icons';
+import { useTranslation } from '../../hooks/useTranslation';
 import { API_BASE_URL, API_ENDPOINTS } from '../../config/uploadModules';
 import './index.less';
 
 const Part1Hero = () => {
+  const { t } = useTranslation();
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -73,12 +75,10 @@ const Part1Hero = () => {
       <div className="hero-content">
         <div className="hero-text">
           <h1 className="hero-title">
-            Modern Office Furniture Solutions
+            {t('hero.title')}
           </h1>
           <p className="hero-subtitle">
-            Leading manufacturer of ergonomic office chairs, modern desks,
-            and complete workstation solutions. Transform your workplace with
-            our premium furniture collection.
+            {t('hero.description')}
           </p>
           <Button
             type="primary"
@@ -86,7 +86,7 @@ const Part1Hero = () => {
             className="hero-button"
             onClick={handleScrollToForm}
           >
-            Get Instant Quote
+            {t('hero.button')}
             <ArrowRightOutlined />
           </Button>
         </div>

@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { UpOutlined } from '@ant-design/icons';
 import Header from './components/Header';
@@ -7,6 +8,11 @@ import UploadGuard from './pages/UploadGuard';
 import './App.less';
 
 function App() {
+  useEffect(() => {
+    const img = new Image();
+    img.src = 'https://saudi.damons.sa/icons/home/ç­å°2.1.jpg';
+  }, []);
+
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };

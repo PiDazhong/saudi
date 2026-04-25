@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Carousel } from 'antd';
+import { useTranslation } from '../../hooks/useTranslation';
 import { API_BASE_URL, API_ENDPOINTS } from '../../config/uploadModules';
 import './index.less';
 
 const Part6Factory = () => {
+  const { t } = useTranslation();
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -43,16 +45,11 @@ const Part6Factory = () => {
         <div className="factory-section">
           <div className="factory-text">
             <h2 className="factory-title">
-              Innovative and Exclusive Materials and Finishes
+              {t('factory.title')}
             </h2>
             <p className="factory-desc">
-              Workspace creates a modern workplace with award-winning ST19 boards
-              and innovative office furniture combining trendy materials and sleek
-              design.
+              {t('factory.description')}
             </p>
-            <a href="#" className="factory-link">
-              Learn More
-            </a>
           </div>
           <div className="factory-image-wrapper">
             {images.length > 0 ? (

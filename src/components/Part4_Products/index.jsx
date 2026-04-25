@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useTranslation } from '../../hooks/useTranslation';
 import { API_BASE_URL, API_ENDPOINTS } from '../../config/uploadModules';
 import './index.less';
 
 const Part4Products = () => {
+  const { t } = useTranslation();
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -47,7 +49,7 @@ const Part4Products = () => {
   return (
     <section className="part4-products">
       <div className="products-container">
-        <h2 className="products-title">Featured Products</h2>
+        <h2 className="products-title">{t('products.title')}</h2>
         <div className="products-grid">
           {products.map((product, index) => {
             const imageItem = images[index];

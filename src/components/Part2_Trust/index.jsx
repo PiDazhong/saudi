@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useTranslation } from '../../hooks/useTranslation';
 import { API_BASE_URL, API_ENDPOINTS } from '../../config/uploadModules';
 import './index.less';
 
 const Part2Trust = () => {
-  const [logoImages, setLogoImages] = useState([]);
+  const { t } = useTranslation();
   const [certImages, setCertImages] = useState([]);
-  const [loadingLogos, setLoadingLogos] = useState(false);
   const [loadingCerts, setLoadingCerts] = useState(false);
 
   const fetchImages = useCallback(async (folder, setImages, setLoading) => {
@@ -31,7 +31,6 @@ const Part2Trust = () => {
   }, []);
 
   useEffect(() => {
-    fetchImages('logo', setLogoImages, setLoadingLogos);
     fetchImages('certificates', setCertImages, setLoadingCerts);
   }, [fetchImages]);
 
@@ -42,22 +41,6 @@ const Part2Trust = () => {
   return (
     <section className="part2-trust">
       <div className="trust-container">
-        {/* Client Logos */}
-        <div className="trust-section">
-          <h2 className="trust-title">Trusted By Leading Companies</h2>
-          <div className="client-logos">
-            {logoImages.map((item, index) => {
-              const filename = typeof item === 'string' ? item : item.name || item.filename;
-              const url = typeof item === 'string' ? getFileUrl('logo', item) : item.url || getFileUrl('logo', item.filename || item.name);
-              return (
-                <div key={index} className="logo-item">
-                  <img src={url} alt={filename} className="logo-img" />
-                </div>
-              );
-            })}
-          </div>
-        </div>
-
         {/* Certificates */}
         <div className="trust-section">
           <div className="certificates-bar">
@@ -72,10 +55,9 @@ const Part2Trust = () => {
             </div>
             <div className="cert-divider" />
             <div className="cert-content">
-              <h3 className="cert-title">Award Winning Office Furniture</h3>
+              <h3 className="cert-title">{t('cert.title')}</h3>
               <p className="cert-desc">
-                Excellent products in the areas of product design, functionality,
-                communication design, and concepts.
+                {t('cert.description')}
               </p>
             </div>
           </div>

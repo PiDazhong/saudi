@@ -1,8 +1,10 @@
 import { useState, useEffect, useCallback } from 'react';
+import { useTranslation } from '../../hooks/useTranslation';
 import { API_BASE_URL, API_ENDPOINTS } from '../../config/uploadModules';
 import './index.less';
 
 const Part3Services = () => {
+  const { t } = useTranslation();
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -42,33 +44,31 @@ const Part3Services = () => {
       icon: images[0]
         ? (typeof images[0] === 'string' ? getFileUrl(images[0]) : images[0].url || getFileUrl(images[0].filename || images[0].name))
         : 'https://workspace.ae/img/cms/Home/Project-icon-.png',
-      title: 'Project Based Quoting',
-      description:
-        'Free Initial Budget Estimate to fully furnish your work space and estimate the total project cost, as well as evaluate saving opportunities.',
+      title: t('service1.title'),
+      description: t('service1.description'),
     },
     {
       id: 2,
       icon: images[1]
         ? (typeof images[1] === 'string' ? getFileUrl(images[1]) : images[1].url || getFileUrl(images[1].filename || images[1].name))
         : 'https://workspace.ae/img/cms/Home/Space-icon-.png',
-      title: 'Space Management and Consultancy',
-      description:
-        'Ask for consultation for space management, project management, personalized planning, assessment budget development, purchasing and installation.',
+      title: t('service2.title'),
+      description: t('service2.description'),
     },
     {
       id: 3,
       icon: images[2]
         ? (typeof images[2] === 'string' ? getFileUrl(images[2]) : images[2].url || getFileUrl(images[2].filename || images[2].name))
         : 'https://workspace.ae/img/cms/Home/Color-icon-.png',
-      title: 'Choose Color, Finishes & Sizes',
-      description:
-        'Providing hundreds of options to customize the size, color and finish of your office furniture to meet the requirements of every company and individual.',
+      title: t('service3.title'),
+      description: t('service3.description'),
     },
   ];
 
   return (
     <section className="part3-services">
       <div className="services-container">
+        <h2 className="services-section-title">{t('services.title')}</h2>
         <div className="services-grid">
           {services.map((service) => (
             <div key={service.id} className="service-item">

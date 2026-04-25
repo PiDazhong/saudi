@@ -1,22 +1,24 @@
 import React from 'react';
 import { Form, Input, Button, message } from 'antd';
+import { useTranslation } from '../../hooks/useTranslation';
 import './index.less';
 
 const { TextArea } = Input;
 
 const Part5ContactForm = () => {
+  const { t } = useTranslation();
   const [form] = Form.useForm();
 
   const handleSubmit = (values) => {
     console.log('Form data:', values);
-    message.success('Thank you! We will contact you soon.');
+    message.success(t('form.success'));
     form.resetFields();
   };
 
   return (
     <section id="contact-form" className="part5-contact">
       <div className="contact-container">
-        <h2 className="contact-title">Contact Us</h2>
+        <h2 className="contact-title">{t('contact.title')}</h2>
 
         {/* Form */}
         <div className="contact-form-wrapper">
@@ -28,46 +30,46 @@ const Part5ContactForm = () => {
           >
             <div className="form-row">
               <Form.Item
-                label="Name"
+                label={t('form.name.label')}
                 name="name"
-                rules={[{ required: true, message: 'Please enter your name' }]}
+                rules={[{ required: true, message: t('form.name.required') }]}
               >
-                <Input placeholder="Your name" size="large" />
+                <Input placeholder={t('form.name.placeholder')} size="large" />
               </Form.Item>
 
-              <Form.Item label="Company" name="company">
-                <Input placeholder="Your company (optional)" size="large" />
+              <Form.Item label={t('form.company.label')} name="company">
+                <Input placeholder={t('form.company.placeholder')} size="large" />
               </Form.Item>
             </div>
 
             <div className="form-row">
               <Form.Item
-                label="Phone"
+                label={t('form.phone.label')}
                 name="phone"
-                rules={[{ required: true, message: 'Please enter your phone' }]}
+                rules={[{ required: true, message: t('form.phone.required') }]}
               >
-                <Input placeholder="Your phone number" size="large" />
+                <Input placeholder={t('form.phone.placeholder')} size="large" />
               </Form.Item>
 
               <Form.Item
-                label="Email"
+                label={t('form.email.label')}
                 name="email"
                 rules={[
-                  { required: true, message: 'Please enter your email' },
-                  { type: 'email', message: 'Please enter a valid email' },
+                  { required: true, message: t('form.email.required') },
+                  { type: 'email', message: t('form.email.invalid') },
                 ]}
               >
-                <Input placeholder="Your email" size="large" />
+                <Input placeholder={t('form.email.placeholder')} size="large" />
               </Form.Item>
             </div>
 
             <Form.Item
-              label="Message"
+              label={t('form.message.label')}
               name="message"
-              rules={[{ required: true, message: 'Please describe your requirements' }]}
+              rules={[{ required: true, message: t('form.message.required') }]}
             >
               <TextArea
-                placeholder="Tell us about your project..."
+                placeholder={t('form.message.placeholder')}
                 rows={4}
                 size="large"
               />
@@ -81,7 +83,7 @@ const Part5ContactForm = () => {
                 block
                 className="submit-button"
               >
-                Submit
+                {t('form.submit')}
               </Button>
             </Form.Item>
           </Form>

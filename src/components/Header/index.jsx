@@ -1,10 +1,12 @@
-import { useState } from 'react';
 import { MailOutlined, GlobalOutlined } from '@ant-design/icons';
+import { useLang } from '../../context/LanguageContext';
+import { useTranslation } from '../../hooks/useTranslation';
 import SocialLinks from '../SocialLinks';
 import './index.less';
 
 const Header = () => {
-  const [lang, setLang] = useState('en');
+  const { lang, setLang } = useLang();
+  const { t } = useTranslation();
 
   const toggleLang = () => {
     setLang((prev) => (prev === 'en' ? 'ar' : 'en'));
@@ -24,7 +26,7 @@ const Header = () => {
               </div>
               <a href="#contact-form" className="top-bar-contact">
                 <MailOutlined />
-                <span>Contact Us</span>
+                <span>{t('header.contactUs')}</span>
               </a>
             </div>
           </div>
