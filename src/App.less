@@ -20,7 +20,7 @@ html {
 /* Common container style */
 .container {
   max-width: 1200px;
-  margin: 0 auto;
+  margin: 0;
   padding: 0 24px;
 }
 
@@ -52,9 +52,37 @@ html {
   }
 }
 
+.back-to-top {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 48px;
+  height: 48px;
+  background: rgb(46, 155, 213);
+  color: #ffffff;
+  border: none;
+  border-radius: 0;
+  cursor: pointer;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  transition: background 0.2s ease;
+
+  &:hover {
+    background: rgb(40, 135, 185);
+  }
+}
+
 /* Responsive section title */
 @media (max-width: 768px) {
   .section-title {
     font-size: 24px;
+  }
+
+  .back-to-top {
+    bottom: 16px;
+    right: 16px;
   }
 }

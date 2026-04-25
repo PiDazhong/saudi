@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Tabs, Upload, Button, List, message, Spin, Popconfirm } from 'antd';
+import { Tabs, Upload, Button, List, message, Spin, Popconfirm, Modal } from 'antd';
 import { UploadOutlined, DeleteOutlined, EyeOutlined } from '@ant-design/icons';
 import { UPLOAD_MODULES, API_BASE_URL, API_ENDPOINTS } from '../../config/uploadModules';
 import './index.less';
@@ -11,6 +11,8 @@ const ModuleUploadManager = ({ module }) => {
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [previewVisible, setPreviewVisible] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState('');
 
   const fetchFiles = useCallback(async () => {
     setLoading(true);
@@ -126,9 +128,10 @@ const ModuleUploadManager = ({ module }) => {
                           type="link"
                           size="small"
                           icon={<EyeOutlined />}
-                          href={url}
-                          target="_blank"
-                          rel="noopener noreferrer"
+                          onClick={() => {
+                            setPreviewUrl(url);
+                            setPreviewVisible(true);
+                          }}
                         >
                           预览
                         </Button>
@@ -152,6 +155,25 @@ const ModuleUploadManager = ({ module }) => {
           />
         </Spin>
       </div>
+
+      <Modal
+        open={previewVisible}
+        footer={null}
+        onCancel={() => setPreviewVisible(false)}
+        centered
+        width="auto"
+        styles={{ body: { padding: 0, background: 'transparent' } }}
+        style={{ top: 20 }}
+        closable={false}
+        maskClosable
+      >
+        <img
+          src={previewUrl}
+          alt="preview"
+          style={{ maxWidth: '100%', maxHeight: '80vh', display: 'block', borderRadius: 8 }}
+          onError={(e) => { e.target.style.display = 'none'; }}
+        />
+      </Modal>
     </div>
   );
 };
