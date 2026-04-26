@@ -21,7 +21,18 @@ const Part4Products = () => {
         throw new Error(data.message || '获取图片列表失败');
       }
       const listData = data.data ?? [];
-      setImages(Array.isArray(listData) ? listData : []);
+      const sortedListData = Array.isArray(listData)
+        ? [...listData].sort((a, b) => {
+            const getName = (item) =>
+              typeof item === 'string' ? item : item.name || item.filename || '';
+            const getNum = (name) => {
+              const match = name.match(/-(\d+)(?:\.[^.]+)?$/);
+              return match ? parseInt(match[1], 10) : 0;
+            };
+            return getNum(getName(a)) - getNum(getName(b));
+          })
+        : [];
+      setImages(sortedListData);
     } catch (err) {
       console.error('获取图片失败:', err.message);
       setImages([]);
@@ -38,33 +49,25 @@ const Part4Products = () => {
     return `${API_BASE_URL}/icons/products/${filename}`;
   };
 
-  const products = [
-    { id: 1, name: 'Zenon Black L-Shape Executive' },
-    { id: 2, name: 'Modena White Ergonomic' },
-    { id: 3, name: 'AVA Series Cluster of 4 Face' },
-    { id: 4, name: 'Max Series Dual Motor Electric' },
-    { id: 5, name: 'Ace Series Cluster of 4 Face' },
-  ];
+  const extractDisplayName = (item) => {
+    const raw = typeof item === 'string' ? item : item.name || item.filename || '';
+    const withoutExt = raw.replace(/\.[^/.]+$/, '');
+    return withoutExt.replace(/-\d+$/, '');
+  };
 
   return (
     <section className="part4-products">
       <div className="products-container">
         <h2 className="products-title">{t('products.title')}</h2>
         <div className="products-grid">
-          {products.map((product, index) => {
-            const imageItem = images[index];
-            const imageUrl = imageItem
-              ? (typeof imageItem === 'string' ? getFileUrl(imageItem) : imageItem.url || getFileUrl(imageItem.filename || imageItem.name))
-              : null;
+          {images.map((item, index) => {
+            const imageUrl = typeof item === 'string'
+              ? getFileUrl(item)
+              : item.url || getFileUrl(item.filename || item.name);
             if (!imageUrl) return null;
-            const imageName = imageItem
-              ? (typeof imageItem === 'string' ? imageItem : imageItem.name || imageItem.filename || '')
-              : '';
-            const displayName = imageName
-              ? imageName.replace(/\.[^/.]+$/, '')
-              : product.name;
+            const displayName = extractDisplayName(item);
             return (
-              <div key={product.id} className="product-item">
+              <div key={index} className="product-item">
                 <div className="product-card">
                   <div className="product-image-wrapper">
                     <img src={imageUrl} alt={displayName} className="product-image" />

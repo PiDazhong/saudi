@@ -1,7 +1,7 @@
 .part4-products {
   width: 100%;
   margin: 80px 0;
-  padding-top: 40px;
+  padding: 40px 0;
   background: #ffffff;
 
   .products-container {
@@ -26,9 +26,11 @@
       cursor: pointer;
       transition: all 0.3s ease;
 
-      &:hover {
-        .product-image-wrapper {
-          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+      .product-image-wrapper {
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.14);
+
+        &:hover {
+          box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
         }
       }
     }
@@ -57,7 +59,7 @@
     }
 
     .product-info {
-      padding: 12px 4px 0;
+      padding: 20px 4px 0;
 
       .product-name {
         font-size: 14px;

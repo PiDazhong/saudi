@@ -41,6 +41,17 @@ const ModuleUploadManager = ({ module }) => {
   }, [fetchFiles]);
 
   const handleCustomRequest = async ({ file, onSuccess, onError }) => {
+    const isDuplicate = files.some((item) => {
+      const existingName = typeof item === 'string' ? item : (item.name || item.filename || '');
+      return existingName === file.name;
+    });
+
+    if (isDuplicate) {
+      message.error('图片名称重复');
+      onError && onError(new Error('图片名称重复'));
+      return;
+    }
+
     setUploading(true);
     const formData = new FormData();
     formData.append('path', '/icons/' + module.folder);
