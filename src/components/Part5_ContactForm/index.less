@@ -2,7 +2,7 @@
   width: 100%;
   margin: 80px 0;
   padding-top: 40px;
-  background: #fff;
+  background: #f8f9fa;
 
   .contact-container {
     padding: 0 24px;
@@ -16,10 +16,9 @@
   }
 
   .contact-form-wrapper {
-    background: #f8f9fa;
+    background: #ffffff;
     padding: 32px;
-    border-radius: 4px;
-    border: 1px solid #e3e3e3;
+    border-radius: 8px;
     margin-bottom: 48px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 
@@ -33,12 +32,37 @@
       .ant-form-item-label {
         font-weight: 500;
         color: rgb(72, 72, 72);
+        font-family: 'Raleway', sans-serif;
+
+        .ant-form-item-required::before {
+          color: #d48806;
+        }
+      }
+
+      .ant-form-item-explain-error {
+        color: #d48806;
+      }
+
+      .ant-input-status-error,
+      .ant-input-affix-wrapper-status-error,
+      textarea.ant-input-status-error {
+        border-color: #d48806 !important;
+
+        &:focus,
+        &:hover {
+          border-color: #d48806 !important;
+        }
       }
 
       .ant-input,
       .ant-input-affix-wrapper,
       textarea.ant-input {
         border-color: #e3e3e3;
+        font-family: 'Raleway', sans-serif;
+
+        &::placeholder {
+          font-family: 'Raleway', sans-serif;
+        }
 
         &:focus,
         &:hover {
@@ -51,6 +75,7 @@
         font-size: 16px;
         background: rgb(46, 155, 213);
         border-color: rgb(46, 155, 213);
+        font-family: 'Raleway', sans-serif;
 
         &:hover {
           background: rgb(40, 135, 185);
