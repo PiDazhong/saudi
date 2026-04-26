@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Form, Input, Button, message } from 'antd';
 import { useTranslation } from '../../hooks/useTranslation';
 import { writeLog, sendEmail } from '../../utils/log';
@@ -9,15 +9,19 @@ const { TextArea } = Input;
 const Part5ContactForm = () => {
   const { t } = useTranslation();
   const [form] = Form.useForm();
+  const [submitting, setSubmitting] = useState(false);
 
   const handleSubmit = async (values) => {
+    setSubmitting(true);
     try {
       await sendEmail(values);
-      message.success(t('form.success'));
+      message.success(t('form.success'), 6);
       writeLog('submit', values);
       form.resetFields();
     } catch {
       message.success(t('form.error'));
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -52,7 +56,10 @@ const Part5ContactForm = () => {
               <Form.Item
                 label={t('form.phone.label')}
                 name="phone"
-                rules={[{ required: true, message: t('form.phone.required') }]}
+                rules={[
+                  { required: true, message: t('form.phone.required') },
+                  { pattern: /^\+?\d+$/, message: t('form.phone.invalid') },
+                ]}
               >
                 <Input placeholder={t('form.phone.placeholder')} size="large" />
               </Form.Item>
@@ -87,6 +94,7 @@ const Part5ContactForm = () => {
                 htmlType="submit"
                 size="large"
                 block
+                loading={submitting}
                 className="submit-button"
               >
                 {t('form.submit')}

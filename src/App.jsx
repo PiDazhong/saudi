@@ -53,8 +53,8 @@ function App() {
             </div>
           }
         />
-        <Route path="/upload" element={<UploadGuard />} />
-        <Route path="/analysis" element={<AnalysisPage />} />
+        <Route path="/upload" element={<ConfigProvider direction="ltr"><UploadGuard /></ConfigProvider>} />
+        <Route path="/analysis" element={<ConfigProvider direction="ltr"><AnalysisPage /></ConfigProvider>} />
       </Routes>
     </ConfigProvider>
   );

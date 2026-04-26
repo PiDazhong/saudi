@@ -1,5 +1,6 @@
 import Part1Hero from '../../components/Part1_Hero';
 import Part6Factory from '../../components/Part6_Factory';
+import Part8Cases from '../../components/Part8_Cases';
 import Part2Trust from '../../components/Part2_Trust';
 import Part3Services from '../../components/Part3_Services';
 import Part4Products from '../../components/Part4_Products';
@@ -11,6 +12,7 @@ const HomePage = () => {
     <>
       <Part1Hero />
       <Part6Factory />
+      <Part8Cases />
       <Part2Trust />
       <Part3Services />
       <Part4Products />

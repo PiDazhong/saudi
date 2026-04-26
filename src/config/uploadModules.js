@@ -10,6 +10,7 @@ export const API_BASE_URL = 'https://saudi.damons.sa';
 export const UPLOAD_MODULES = [
   { key: 'home', label: '首页', folder: 'home' },
   { key: 'factory', label: '工厂', folder: 'factory' },
+  { key: 'eg', label: '工程案例', folder: 'eg' },
   { key: 'logo', label: '公司logo', folder: 'logo' },
   { key: 'certificates', label: '证书', folder: 'certificates' },
   { key: 'services', label: '我们的服务', folder: 'services' },
