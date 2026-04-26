@@ -5,6 +5,7 @@ import {
   FallOutlined,
   BarChartOutlined,
   LineChartOutlined,
+  ExportOutlined,
 } from '@ant-design/icons';
 import {
   LineChart,
@@ -18,6 +19,7 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 import dayjs from 'dayjs';
+import * as XLSX from 'xlsx';
 import { API_BASE_URL } from '../../config/uploadModules';
 import './index.less';
 
@@ -86,7 +88,7 @@ const mergeData = (viewList, submitList, start, end) => {
   return result;
 };
 
-const StatCard = ({ title, total, trend, trendValue, color, data, dataKey, name }) => {
+const StatCard = ({ title, total, trend, trendValue, color, data, dataKey, name, onExport }) => {
   const [chartType, setChartType] = useState('line');
   const isUp = trend === 'up';
   const isLine = chartType === 'line';
@@ -126,13 +128,25 @@ const StatCard = ({ title, total, trend, trendValue, color, data, dataKey, name 
             {total.toLocaleString()}
           </div>
         </div>
-        <div
-          className="stat-icon"
-          style={{ background: `${color}15`, color, cursor: 'pointer' }}
-          onClick={() => setChartType((prev) => (prev === 'line' ? 'bar' : 'line'))}
-          title={isLine ? '切换为柱状图' : '切换为折线图'}
-        >
-          {isLine ? <BarChartOutlined /> : <LineChartOutlined />}
+        <div className="stat-actions">
+          {onExport && (
+            <div
+              className="stat-export-btn"
+              style={{ background: `${color}15`, color }}
+              onClick={onExport}
+              title="导出数据"
+            >
+              <ExportOutlined />
+            </div>
+          )}
+          <div
+            className="stat-icon"
+            style={{ background: `${color}15`, color, cursor: 'pointer' }}
+            onClick={() => setChartType((prev) => (prev === 'line' ? 'bar' : 'line'))}
+            title={isLine ? '切换为柱状图' : '切换为折线图'}
+          >
+            {isLine ? <BarChartOutlined /> : <LineChartOutlined />}
+          </div>
         </div>
       </div>
       <div className="chart-area">
@@ -169,6 +183,7 @@ const StatCard = ({ title, total, trend, trendValue, color, data, dataKey, name 
 
 const AnalysisPage = () => {
   const [data, setData] = useState([]);
+  const [rawSubmitList, setRawSubmitList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [range, setRange] = useState('1week');
   const [dates, setDates] = useState(() => {
@@ -187,9 +202,11 @@ const AnalysisPage = () => {
         fetchLogData(startDate, endDate, 'submit'),
       ]);
       setData(mergeData(viewList, submitList, start, end));
+      setRawSubmitList(submitList);
     } catch (err) {
       message.error(err.message);
       setData([]);
+      setRawSubmitList([]);
     } finally {
       setLoading(false);
     }
@@ -213,6 +230,25 @@ const AnalysisPage = () => {
     if (!vals || !vals[0] || !vals[1]) return;
     setRange('custom');
     setDates(vals);
+  };
+
+  const handleExportSubmit = () => {
+    if (!rawSubmitList || rawSubmitList.length === 0) {
+      message.warning('暂无数据可导出');
+      return;
+    }
+    const exportData = rawSubmitList.map((item) => ({
+      timestamp: item.timestamp,
+      name: item.name,
+      company: item.company,
+      phone: item.phone,
+      email: item.email,
+      message: item.message,
+    }));
+    const ws = XLSX.utils.json_to_sheet(exportData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, '用户点击量');
+    XLSX.writeFile(wb, `用户点击量_${formatDateStr(dayjs())}.xlsx`);
   };
 
   const { totalVisits, totalClicks, visitTrend, clickTrend } = useMemo(() => {
@@ -239,7 +275,7 @@ const AnalysisPage = () => {
         <div className="page-header">
           <div className="header-left">
             <h1 className="page-title">Data Overview</h1>
-            <p className="page-subtitle">访问与点击数据监控面板</p>
+            <p className="page-subtitle">数据监控面板</p>
           </div>
           <div className="header-controls">
             <Segmented
@@ -284,6 +320,7 @@ const AnalysisPage = () => {
               data={data}
               dataKey="clicks"
               name="点击量"
+              onExport={handleExportSubmit}
             />
           </div>
         </Spin>

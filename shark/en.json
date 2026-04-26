@@ -38,5 +38,6 @@
   "form.message.placeholder": "Tell us about your project...",
   "form.message.required": "Please describe your requirements",
   "form.submit": "Get Free Consultation",
-  "form.success": "Thank you! We will contact you soon."
+  "form.success": "Thank you! We will contact you soon.",
+  "form.error": "Sorry, we encountered a small issue."
 }

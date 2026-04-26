@@ -1,7 +1,7 @@
 import React from 'react';
 import { Form, Input, Button, message } from 'antd';
 import { useTranslation } from '../../hooks/useTranslation';
-import { writeLog } from '../../utils/log';
+import { writeLog, sendEmail } from '../../utils/log';
 import './index.less';
 
 const { TextArea } = Input;
@@ -10,11 +10,15 @@ const Part5ContactForm = () => {
   const { t } = useTranslation();
   const [form] = Form.useForm();
 
-  const handleSubmit = (values) => {
-    writeLog('submit');
-    console.log('Form data:', values);
-    message.success(t('form.success'));
-    form.resetFields();
+  const handleSubmit = async (values) => {
+    try {
+      await sendEmail(values);
+      message.success(t('form.success'));
+      writeLog('submit', values);
+      form.resetFields();
+    } catch {
+      message.success(t('form.error'));
+    }
   };
 
   return (
