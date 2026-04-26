@@ -6,7 +6,7 @@ import {
 import './index.less';
 
 const SOCIAL_LINKS = [
-  { url: 'https://api.whatsapp.com/send?phone=9660556094545', label: 'WhatsApp' },
+  { url: 'https://api.whatsapp.com/message/MWKT6IDSYXI7H1?autoload=1&app_absent=0', label: 'WhatsApp' },
   { url: 'https://www.instagram.com/damons.sa/', label: 'Instagram' },
   { url: 'https://www.facebook.com/profile.php?id=61583115309316', label: 'Facebook' },
   { url: 'https://www.tiktok.com/@saudi.damons', label: 'TikTok' },

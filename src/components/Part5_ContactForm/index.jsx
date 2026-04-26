@@ -1,6 +1,7 @@
 import React from 'react';
 import { Form, Input, Button, message } from 'antd';
 import { useTranslation } from '../../hooks/useTranslation';
+import { writeLog } from '../../utils/log';
 import './index.less';
 
 const { TextArea } = Input;
@@ -10,6 +11,7 @@ const Part5ContactForm = () => {
   const [form] = Form.useForm();
 
   const handleSubmit = (values) => {
+    writeLog('submit');
     console.log('Form data:', values);
     message.success(t('form.success'));
     form.resetFields();
