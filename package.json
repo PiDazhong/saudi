@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "vite build && node postbuild.js",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "commit": "npm run build && git add . && git commit -m 'feat: page开发' && git push origin master"
   },
   "dependencies": {
     "@ant-design/icons": "^5.6.1",

@@ -87,12 +87,33 @@
 /* Responsive */
 @media (max-width: 768px) {
   .header-top-bar {
-    .top-bar-right {
+    .top-bar-contact {
       display: none;
     }
 
     .top-bar-inner {
       justify-content: center;
+      position: relative;
+      height: 24px;
+    }
+
+    .top-bar-right {
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      height: auto;
+    }
+
+    .social-links {
+      margin: 0 auto;
+    }
+  }
+
+  [dir='rtl'] .header-top-bar {
+    .top-bar-right {
+      right: auto;
+      left: 0;
     }
   }
 }

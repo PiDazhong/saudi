@@ -1,21 +1,15 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from 'antd';
-import { ArrowRightOutlined, GlobalOutlined } from '@ant-design/icons';
+import { ArrowRightOutlined } from '@ant-design/icons';
 import { useTranslation } from '../../hooks/useTranslation';
-import { useLang } from '../../context/LanguageContext';
 import { API_BASE_URL, API_ENDPOINTS } from '../../config/uploadModules';
 import './index.less';
 
 const Part1Hero = () => {
   const { t } = useTranslation();
-  const { lang, setLang } = useLang();
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(false);
-
-  const toggleLang = () => {
-    setLang((prev) => (prev === 'en' ? 'ar' : 'en'));
-  };
 
   const fetchImages = useCallback(async () => {
     setLoading(true);
@@ -75,10 +69,6 @@ const Part1Hero = () => {
           <Link to="/" className="header-logo">
             <img src="/damons.png" alt="Damons" className="logo-img" />
           </Link>
-          <div className="hero-lang-switch" onClick={toggleLang}>
-            <GlobalOutlined />
-            <span>{lang.toUpperCase()}</span>
-          </div>
         </div>
       </div>
 
