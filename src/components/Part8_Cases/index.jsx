@@ -1,16 +1,16 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Carousel } from 'antd';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { EffectCoverflow, Autoplay, Pagination } from 'swiper/modules';
 import { useTranslation } from '../../hooks/useTranslation';
 import { API_BASE_URL, API_ENDPOINTS } from '../../config/uploadModules';
+import 'swiper/swiper-bundle.css';
 import './index.less';
 
 const Part8Cases = () => {
-  const { t } = useTranslation();
+  const { t, lang } = useTranslation();
   const [images, setImages] = useState([]);
-  const [loading, setLoading] = useState(false);
 
   const fetchImages = useCallback(async () => {
-    setLoading(true);
     try {
       const res = await fetch(`${API_BASE_URL}${API_ENDPOINTS.list()}`, {
         method: 'POST',
@@ -26,8 +26,6 @@ const Part8Cases = () => {
     } catch (err) {
       console.error('获取图片失败:', err.message);
       setImages([]);
-    } finally {
-      setLoading(false);
     }
   }, []);
 
@@ -45,18 +43,39 @@ const Part8Cases = () => {
         <div className="cases-section">
           <div className="cases-image-wrapper">
             {images.length > 0 ? (
-              <Carousel autoplay>
+              <Swiper
+                key={lang}
+                dir={lang === 'ar' ? 'rtl' : 'ltr'}
+                modules={[EffectCoverflow, Autoplay, Pagination]}
+                effect="coverflow"
+                grabCursor
+                centeredSlides
+                slidesPerView={1}
+                rewind={images.length >= 2}
+                loop={false}
+                speed={800}
+                autoplay={{ delay: 4000, disableOnInteraction: false }}
+                pagination={{ clickable: true }}
+                coverflowEffect={{
+                  rotate: 35,
+                  stretch: 0,
+                  depth: 150,
+                  modifier: 1,
+                  slideShadows: false,
+                }}
+                className="cases-swiper"
+              >
                 {images.map((item, index) => {
                   const url = typeof item === 'string'
                     ? getFileUrl(item)
                     : item.url || getFileUrl(item.filename || item.name);
                   return (
-                    <div key={index} className="carousel-slide">
+                    <SwiperSlide key={index}>
                       <img src={url} alt={`cases-${index}`} className="cases-image" />
-                    </div>
+                    </SwiperSlide>
                   );
                 })}
-              </Carousel>
+              </Swiper>
             ) : (
               <div className="cases-image" />
             )}
