@@ -1,16 +1,18 @@
+import { useState, useEffect } from 'react';
 import {
   InstagramOutlined,
   FacebookOutlined,
   LinkedinOutlined,
 } from '@ant-design/icons';
+import { API_BASE_URL } from '../../config/uploadModules';
 import './index.less';
 
-const SOCIAL_LINKS = [
-  { url: 'https://api.whatsapp.com/message/MWKT6IDSYXI7H1?autoload=1&app_absent=0', label: 'WhatsApp' },
-  { url: 'https://www.instagram.com/damons.sa/', label: 'Instagram' },
-  { url: 'https://www.facebook.com/profile.php?id=61583115309316', label: 'Facebook' },
-  { url: 'https://www.tiktok.com/@saudi.damons', label: 'TikTok' },
-  { url: 'https://www.linkedin.com/company/saudidamons/posts/?feedView=all', label: 'LinkedIn' },
+const PLATFORM_ORDER = [
+  { code: 'whatsapp', label: 'WhatsApp' },
+  { code: 'instagram', label: 'Instagram' },
+  { code: 'facebook', label: 'Facebook' },
+  { code: 'tiktok', label: 'TikTok' },
+  { code: 'linkedin', label: 'LinkedIn' },
 ];
 
 const getPlatform = (url) => {
@@ -48,13 +50,43 @@ const PLATFORM_ICONS = {
 };
 
 const SocialLinks = () => {
+  const [links, setLinks] = useState([]);
+
+  useEffect(() => {
+    fetch(`${API_BASE_URL}/saudi-server/codeTable/query`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        codes: ['whatsapp', 'facebook', 'instagram', 'linkedin', 'tiktok'],
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        const map = {};
+        if (data.success && data.code === 1 && Array.isArray(data.data)) {
+          data.data.forEach((item) => {
+            map[item.code] = item.value;
+          });
+        }
+        setLinks(
+          PLATFORM_ORDER.map((item) => ({
+            ...item,
+            url: map[item.code],
+          })).filter((item) => item.url)
+        );
+      })
+      .catch(() => {
+        setLinks([]);
+      });
+  }, []);
+
   return (
     <div className="social-links">
-      {SOCIAL_LINKS.map(({ url, label }) => {
+      {links.map(({ url, label }) => {
         const platform = getPlatform(url);
         return (
           <a
-            key={url}
+            key={label}
             href={url}
             className="social-link"
             aria-label={label}

@@ -14,6 +14,7 @@
   
   .container {
     padding: 0 40px;
+    min-height: 24px;
   }
 
   .top-bar-inner {
@@ -27,6 +28,7 @@
     display: flex;
     align-items: center;
     gap: 16px;
+    height: 24px;
   }
 
   .lang-switch {
@@ -85,6 +87,12 @@
 /* Responsive */
 @media (max-width: 768px) {
   .header-top-bar {
-    display: none;
+    .top-bar-right {
+      display: none;
+    }
+
+    .top-bar-inner {
+      justify-content: center;
+    }
   }
 }

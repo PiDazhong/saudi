@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Tabs, Upload, Button, List, message, Spin, Popconfirm, Modal } from 'antd';
-import { UploadOutlined, DeleteOutlined, EyeOutlined } from '@ant-design/icons';
+import { Tabs, Upload, Button, List, message, Spin, Popconfirm, Modal, Card, Input } from 'antd';
+import { UploadOutlined, DeleteOutlined, EyeOutlined, PlusOutlined } from '@ant-design/icons';
 import { UPLOAD_MODULES, API_BASE_URL, API_ENDPOINTS } from '../../config/uploadModules';
 import './index.less';
 
@@ -189,18 +189,203 @@ const ModuleUploadManager = ({ module }) => {
   );
 };
 
+const CodeTableManager = () => {
+  const [list, setList] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
+
+  const fetchList = useCallback(async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(`${API_BASE_URL}/saudi-server/codeTable/query`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ codes: [] }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success || data.code !== 1) {
+        throw new Error(data.message || '查询失败');
+      }
+      const arr = Array.isArray(data.data) ? data.data : [];
+      arr.sort((a, b) => {
+        const sa = a.sort === undefined || a.sort === null || a.sort === '' ? 0 : Number(a.sort);
+        const sb = b.sort === undefined || b.sort === null || b.sort === '' ? 0 : Number(b.sort);
+        if (Number.isNaN(sa)) return 1;
+        if (Number.isNaN(sb)) return -1;
+        return sa - sb;
+      });
+      setList(arr.map((item) => ({ ...item, key: item.code })));
+    } catch (err) {
+      message.error(`查询码表失败: ${err.message}`);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchList();
+  }, [fetchList]);
+
+  const handleAdd = () => {
+    setList((prev) => [...prev, { sort: '', code: '', value: '', desc: '', key: Date.now() }]);
+  };
+
+  const handleChange = (index, field, value) => {
+    setList((prev) => {
+      const next = [...prev];
+      next[index] = { ...next[index], [field]: value };
+      return next;
+    });
+  };
+
+  const handleDelete = async (index) => {
+    const item = list[index];
+    if (item.code && item.code.trim()) {
+      try {
+        const res = await fetch(`${API_BASE_URL}/saudi-server/codeTable/delete`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ code: item.code.trim() }),
+        });
+        const data = await res.json();
+        if (!res.ok || !data.success || data.code !== 1) {
+          throw new Error(data.message || '删除失败');
+        }
+        message.success('删除成功');
+      } catch (err) {
+        message.error(`删除失败: ${err.message}`);
+        return;
+      }
+    }
+    setList((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const handleSave = async () => {
+    const emptyCode = list.some((item) => !item.code || !item.code.trim());
+    if (emptyCode) {
+      message.error('Code 不能为空');
+      return;
+    }
+    const codes = list.map((item) => item.code.trim());
+    if (new Set(codes).size !== codes.length) {
+      message.error('Code 不能重复');
+      return;
+    }
+
+    setSaving(true);
+    try {
+      const res = await fetch(`${API_BASE_URL}/saudi-server/codeTable/save`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          items: list.map((item) => ({
+            sort: item.sort === '' || item.sort === undefined || item.sort === null ? undefined : Number(item.sort),
+            code: item.code.trim(),
+            value: (item.value || '').trim(),
+            desc: (item.desc || '').trim(),
+          })),
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success || data.code !== 1) {
+        throw new Error(data.message || '保存失败');
+      }
+      message.success('保存成功');
+      await fetchList();
+    } catch (err) {
+      message.error(`保存失败: ${err.message}`);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <Spin spinning={loading}>
+      <div className="code-table-manager">
+        <div className="code-table-header">
+          <span className="code-table-col sort-col">Sort</span>
+          <span className="code-table-col code-col">Code（必填）</span>
+          <span className="code-table-col value-col">Value</span>
+          <span className="code-table-col desc-col">Desc</span>
+          <span className="code-table-col action-col">操作</span>
+        </div>
+        <div className="code-table-body">
+          {list.map((item, index) => (
+            <div className="code-table-row" key={item.key || item.code}>
+              <div className="code-table-col sort-col">
+                <Input
+                  placeholder="Sort"
+                  value={item.sort}
+                  onChange={(e) => handleChange(index, 'sort', e.target.value)}
+                />
+              </div>
+              <div className="code-table-col code-col">
+                <Input
+                  placeholder="请输入 Code"
+                  value={item.code}
+                  onChange={(e) => handleChange(index, 'code', e.target.value)}
+                />
+              </div>
+              <div className="code-table-col value-col">
+                <Input
+                  placeholder="请输入 Value"
+                  value={item.value}
+                  onChange={(e) => handleChange(index, 'value', e.target.value)}
+                />
+              </div>
+              <div className="code-table-col desc-col">
+                <Input
+                  placeholder="请输入 Desc"
+                  value={item.desc}
+                  onChange={(e) => handleChange(index, 'desc', e.target.value)}
+                />
+              </div>
+              <div className="code-table-col action-col">
+                <Button
+                  type="link"
+                  danger
+                  onClick={() => handleDelete(index)}
+                  icon={<DeleteOutlined />}
+                >
+                  删除
+                </Button>
+              </div>
+            </div>
+          ))}
+          {list.length === 0 && (
+            <div className="code-table-empty">暂无数据，请点击新增</div>
+          )}
+        </div>
+        <div className="code-table-footer">
+          <Button onClick={handleAdd}>
+            新增
+          </Button>
+          <Button type="primary" loading={saving} onClick={handleSave}>
+            保存
+          </Button>
+        </div>
+      </div>
+    </Spin>
+  );
+};
+
 const UploadPage = () => {
   return (
     <div className="upload-page">
       <div className="container">
-        <h1 className="section-title">文件管理</h1>
-        <Tabs defaultActiveKey={UPLOAD_MODULES[0]?.key} type="card" className="upload-tabs">
-          {UPLOAD_MODULES.map((module) => (
-            <TabPane tab={module.label} key={module.key}>
-              <ModuleUploadManager module={module} />
-            </TabPane>
-          ))}
-        </Tabs>
+        <Card title="文件管理" className="upload-card">
+          <Tabs defaultActiveKey={UPLOAD_MODULES[0]?.key} type="card" className="upload-tabs">
+            {UPLOAD_MODULES.map((module) => (
+              <TabPane tab={module.label} key={module.key}>
+                <ModuleUploadManager module={module} />
+              </TabPane>
+            ))}
+          </Tabs>
+        </Card>
+
+        <Card title="信息管理" className="upload-card">
+          <CodeTableManager />
+        </Card>
       </div>
     </div>
   );
