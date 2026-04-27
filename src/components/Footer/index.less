@@ -93,12 +93,30 @@
 .footer-copyright {
   padding: 16px 0;
   border-top: 1px solid #333;
-  text-align: center;
+
+  .container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
 
   p {
     font-size: 13px;
     color: #888;
     margin: 0;
+  }
+
+  .footer-privacy-link {
+    font-size: 13px;
+    color: #888;
+    text-decoration: none;
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: rgb(46, 155, 213);
+    }
   }
 }
 

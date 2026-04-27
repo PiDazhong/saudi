@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import {
   PhoneOutlined,
   MailOutlined,
@@ -75,7 +76,8 @@ const Footer = () => {
       {/* Copyright */}
       <div className="footer-copyright">
         <div className="container">
-          <p>© 2026 DAMONS. All rights reserved.</p>
+          <p>{t('footer.rights')}</p>
+          <Link to="/privacy" className="footer-privacy-link">{t('privacy.link')}</Link>
         </div>
       </div>
     </footer>

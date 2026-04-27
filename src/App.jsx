@@ -4,9 +4,11 @@ import { UpOutlined } from '@ant-design/icons';
 import { ConfigProvider } from 'antd';
 import Header from './components/Header';
 import Footer from './components/Footer';
+import CookieBanner from './components/CookieBanner';
 import HomePage from './pages/HomePage';
 import UploadGuard from './pages/UploadGuard';
 import AnalysisPage from './pages/AnalysisPage';
+import PrivacyPage from './pages/PrivacyPage';
 import { useLang } from './context/LanguageContext';
 import { writeLog } from './utils/log';
 import './App.less';
@@ -43,6 +45,7 @@ function App() {
                 <HomePage />
               </main>
               <Footer />
+              <CookieBanner />
               <button
                 className="back-to-top"
                 onClick={scrollToTop}
@@ -55,6 +58,7 @@ function App() {
         />
         <Route path="/upload" element={<ConfigProvider direction="ltr"><UploadGuard /></ConfigProvider>} />
         <Route path="/analysis" element={<ConfigProvider direction="ltr"><AnalysisPage /></ConfigProvider>} />
+        <Route path="/privacy" element={<div className="app"><Header /><main><PrivacyPage /></main><Footer /></div>} />
       </Routes>
     </ConfigProvider>
   );
