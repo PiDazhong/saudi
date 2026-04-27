@@ -1,8 +1,30 @@
+import { useState, useEffect } from 'react';
 import { useTranslation } from '../../hooks/useTranslation';
+import { API_BASE_URL } from '../../config/uploadModules';
 import './index.less';
 
 const PrivacyPage = () => {
   const { t } = useTranslation();
+  const [contactMap, setContactMap] = useState({});
+
+  useEffect(() => {
+    fetch(`${API_BASE_URL}/saudi-server/codeTable/query`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ codes: ['tel', 'mail'] }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success && data.code === 1 && Array.isArray(data.data)) {
+          const map = {};
+          data.data.forEach((item) => {
+            map[item.code] = item.value;
+          });
+          setContactMap(map);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   const sections = [
     { key: 'collection', title: t('privacy.collection.title'), text: t('privacy.collection.text') },
@@ -35,11 +57,11 @@ const PrivacyPage = () => {
               <div className="privacy-contact-list">
                 <div className="privacy-contact-item">
                   <span className="privacy-contact-label">{t('privacy.contact.emailLabel')}</span>
-                  <span dir="ltr">{t('contact.email')}</span>
+                  <span>{contactMap.mail}</span>
                 </div>
                 <div className="privacy-contact-item">
                   <span className="privacy-contact-label">{t('privacy.contact.phoneLabel')}</span>
-                  <span dir="ltr">{t('contact.phone')}</span>
+                  <span dir="ltr">{contactMap.tel}</span>
                 </div>
                 <div className="privacy-contact-item">
                   <span className="privacy-contact-label">{t('privacy.contact.addressLabel')}</span>
