@@ -64,5 +64,6 @@
   "privacy.contact.emailLabel": "Email:",
   "privacy.contact.phoneLabel": "Phone:",
   "privacy.contact.addressLabel": "Address:",
-  "privacy.link": "Privacy Policy"
+  "privacy.link": "Privacy Policy",
+  "letsChat.text": "Let's chat."
 }

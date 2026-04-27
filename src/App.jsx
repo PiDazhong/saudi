@@ -5,6 +5,7 @@ import { ConfigProvider } from 'antd';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import CookieBanner from './components/CookieBanner';
+import LetsChat from './components/LetsChat';
 import HomePage from './pages/HomePage';
 import UploadGuard from './pages/UploadGuard';
 import AnalysisPage from './pages/AnalysisPage';
@@ -46,6 +47,7 @@ function App() {
               </main>
               <Footer />
               <CookieBanner />
+              <LetsChat />
               <button
                 className="back-to-top"
                 onClick={scrollToTop}
