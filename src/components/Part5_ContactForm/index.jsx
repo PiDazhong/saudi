@@ -6,6 +6,23 @@ import './index.less';
 
 const { TextArea } = Input;
 
+const RATE_LIMIT_KEY = 'contact_form_last_submit';
+const COOLDOWN_MS = 10000;
+
+const getRemainingCooldown = () => {
+  const last = localStorage.getItem(RATE_LIMIT_KEY);
+  if (!last) return 0;
+  const elapsed = Date.now() - parseInt(last, 10);
+  return Math.max(0, COOLDOWN_MS - elapsed);
+};
+
+const sanitizeString = (str) => {
+  if (typeof str !== 'string') return str;
+  return str.replace(/<[^>]*>/g, '');
+};
+
+const SPAM_KEYWORDS = ['test', 'spam', 'xxx', 'http', 'https', 'www.'];
+
 const Part5ContactForm = () => {
   const { t } = useTranslation();
   const [form] = Form.useForm();
@@ -13,13 +30,46 @@ const Part5ContactForm = () => {
 
   const handleSubmit = async (values) => {
     setSubmitting(true);
+    let sanitizedValues = values;
     try {
-      await sendEmail(values);
+      const remaining = getRemainingCooldown();
+      if (remaining > 0) {
+        const seconds = Math.ceil(remaining / 1000);
+        message.warning(t('form.rateLimit').replace('{{seconds}}', seconds));
+        return;
+      }
+
+      if (values.website) {
+        return;
+      }
+
+      sanitizedValues = Object.fromEntries(
+        Object.entries(values).map(([k, v]) => [
+          k,
+          typeof v === 'string' ? sanitizeString(v) : v,
+        ])
+      );
+
+      const hasSpam = Object.values(sanitizedValues).some(
+        (v) =>
+          typeof v === 'string' &&
+          SPAM_KEYWORDS.some((kw) => v.toLowerCase().includes(kw))
+      );
+
+      if (!hasSpam) {
+        await sendEmail(sanitizedValues);
+      }
+
+      localStorage.setItem(RATE_LIMIT_KEY, Date.now().toString());
       message.success(t('form.success'), 6);
-      writeLog('submit', values);
+      writeLog('submit', sanitizedValues);
       form.resetFields();
-    } catch {
-      message.success(t('form.error'));
+    } catch (err) {
+      message.error(t('form.error'));
+      writeLog('submit_error', {
+        error: err?.message || String(err),
+        values: sanitizedValues,
+      });
     } finally {
       setSubmitting(false);
     }
@@ -44,11 +94,11 @@ const Part5ContactForm = () => {
                 name="name"
                 rules={[{ required: true, message: t('form.name.required') }]}
               >
-                <Input placeholder={t('form.name.placeholder')} size="large" />
+                <Input placeholder={t('form.name.placeholder')} size="large" maxLength={50} />
               </Form.Item>
 
               <Form.Item label={t('form.company.label')} name="company">
-                <Input placeholder={t('form.company.placeholder')} size="large" />
+                <Input placeholder={t('form.company.placeholder')} size="large" maxLength={100} />
               </Form.Item>
             </div>
 
@@ -61,7 +111,7 @@ const Part5ContactForm = () => {
                   { pattern: /^\+?\d+$/, message: t('form.phone.invalid') },
                 ]}
               >
-                <Input placeholder={t('form.phone.placeholder')} size="large" />
+                <Input placeholder={t('form.phone.placeholder')} size="large" maxLength={20} />
               </Form.Item>
 
               <Form.Item
@@ -72,7 +122,7 @@ const Part5ContactForm = () => {
                   { type: 'email', message: t('form.email.invalid') },
                 ]}
               >
-                <Input placeholder={t('form.email.placeholder')} size="large" />
+                <Input placeholder={t('form.email.placeholder')} size="large" maxLength={100} />
               </Form.Item>
             </div>
 
@@ -85,7 +135,12 @@ const Part5ContactForm = () => {
                 placeholder={t('form.message.placeholder')}
                 rows={4}
                 size="large"
+                maxLength={500}
               />
+            </Form.Item>
+
+            <Form.Item name="website" className="honeypot-field">
+              <Input autoComplete="off" tabIndex={-1} />
             </Form.Item>
 
             <Form.Item>

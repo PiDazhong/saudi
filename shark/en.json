@@ -43,6 +43,7 @@
   "form.submit": "Get Free Consultation",
   "form.success": "Thank you! We will contact you soon.",
   "form.error": "Sorry, we encountered a small issue.",
+  "form.rateLimit": "Please wait {{seconds}} seconds before submitting again.",
   "footer.rights": "© 2026 DAMONS. All rights reserved.",
   "cookie.banner.text": "We use necessary cookies and collect page view data and contact form information to improve your experience. By continuing to browse, you agree to our data practices as described in the ",
   "cookie.banner.accept": "Accept",
