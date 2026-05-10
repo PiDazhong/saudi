@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { Table, Button, message, Popconfirm, Space } from 'antd';
+import { Table, Button, message, Popconfirm, Space, Pagination } from 'antd';
 import {
   LockOutlined,
   UnlockOutlined,
@@ -171,6 +171,11 @@ const LogTableList = ({ dataList = [], onRefresh }) => {
     XLSX.writeFile(wb, `用户点击量详情_${dayjs().format('YYYY-MM-DD')}.xlsx`);
   };
 
+  const pageData = sortedData.slice(
+    (pagination.current - 1) * pagination.pageSize,
+    pagination.current * pagination.pageSize
+  );
+
   const columns = [
     { title: 'Name', dataIndex: 'name', key: 'name', fixed: isMobile ? false : 'left', width: 100 },
     { title: 'Company', dataIndex: 'company', key: 'company', fixed: isMobile ? false : 'left', width: 140 },
@@ -252,22 +257,118 @@ const LogTableList = ({ dataList = [], onRefresh }) => {
           导出数据
         </Button>
       </div>
-      <Table
-        columns={columns}
-        dataSource={sortedData}
-        rowKey={(record, index) =>
-          `${record.ip || ''}-${record.timestamp || ''}-${index}`
-        }
-        pagination={{
-          ...pagination,
-          total: dataList.length,
-          showSizeChanger: true,
-          pageSizeOptions: [10, 20, 50],
-          onChange: (page, pageSize) =>
-            setPagination({ current: page, pageSize }),
-        }}
-        scroll={{ x: 'max-content' }}
-      />
+      {isMobile ? (
+        <>
+          <div className="mobile-list">
+            {pageData.map((item, index) => (
+              <div className="mobile-card" key={`${item.ip || ''}-${item.timestamp || ''}-${index}`}>
+                <div className="mobile-row">
+                  <span className="mobile-label">Name:</span>
+                  <span className="mobile-value">{item.name || '-'}</span>
+                </div>
+                <div className="mobile-row">
+                  <span className="mobile-label">Company:</span>
+                  <span className="mobile-value">{item.company || '-'}</span>
+                </div>
+                <div className="mobile-row">
+                  <span className="mobile-label">Phone:</span>
+                  <span className="mobile-value">{item.phone || '-'}</span>
+                </div>
+                <div className="mobile-row">
+                  <span className="mobile-label">IP:</span>
+                  <span className="mobile-value">{item.ip || '-'}</span>
+                </div>
+                <div className="mobile-row">
+                  <span className="mobile-label">Email:</span>
+                  <span className="mobile-value">{item.email || '-'}</span>
+                </div>
+                <div className="mobile-row">
+                  <span className="mobile-label">Message:</span>
+                  <span className="mobile-value"><Abbr text={item.message} lines={0} /></span>
+                </div>
+                <div className="mobile-row">
+                  <span className="mobile-label">Device:</span>
+                  <span className="mobile-value mobile-value-nowrap"><Abbr text={item.device} /></span>
+                </div>
+                <div className="mobile-row">
+                  <span className="mobile-label">Timestamp:</span>
+                  <span className="mobile-value">{item.timestamp || '-'}</span>
+                </div>
+                <div className="mobile-row mobile-actions">
+                  {blackIps.includes(item.ip) ? (
+                    <Button
+                      type="link"
+                      size="small"
+                      icon={<UnlockOutlined />}
+                      loading={loadingIp === item.ip}
+                      onClick={() => handleUnbanIp(item.ip)}
+                    >
+                      解禁
+                    </Button>
+                  ) : (
+                    <Button
+                      type="link"
+                      size="small"
+                      icon={<LockOutlined />}
+                      loading={loadingIp === item.ip}
+                      onClick={() => handleBanIp(item.ip)}
+                    >
+                      禁用
+                    </Button>
+                  )}
+                  <Popconfirm
+                    title="确认删除"
+                    description="确定要删除这条记录吗？"
+                    onConfirm={() => handleDelete(item.timestamp)}
+                    okText="删除"
+                    cancelText="取消"
+                  >
+                    <Button
+                      type="link"
+                      size="small"
+                      icon={<DeleteOutlined />}
+                      loading={deletingTimestamp === item.timestamp}
+                    >
+                      删除
+                    </Button>
+                  </Popconfirm>
+                </div>
+              </div>
+            ))}
+            {pageData.length === 0 && (
+              <div className="mobile-empty">暂无数据</div>
+            )}
+          </div>
+          <Pagination
+            className="mobile-pagination"
+            current={pagination.current}
+            pageSize={pagination.pageSize}
+            total={sortedData.length}
+            showSizeChanger
+            pageSizeOptions={[10, 20, 50]}
+            onChange={(page, pageSize) =>
+              setPagination({ current: page, pageSize })
+            }
+          />
+        </>
+      ) : (
+        <Table
+          columns={columns}
+          dataSource={sortedData}
+          rowKey={(record, index) =>
+            `${record.ip || ''}-${record.timestamp || ''}-${index}`
+          }
+          pagination={{
+            ...pagination,
+            total: dataList.length,
+            showSizeChanger: true,
+            pageSizeOptions: [10, 20, 50],
+            onChange: (page, pageSize) =>
+              setPagination({ current: page, pageSize }),
+          }}
+          scroll={{ x: 'max-content' }}
+        />
+      )}
     </div>
   );
 };

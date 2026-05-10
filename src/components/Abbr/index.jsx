@@ -6,7 +6,7 @@ import * as _ from 'lodash';
 import { Tooltip } from 'antd';
 import Highlight from './HighLight';
 
-const Abbr = ({ text, className, highLightText }) => {
+const Abbr = ({ text, className, highLightText, lines = 1 }) => {
   const spanRef = useRef(null);
 
   const [visible, setVisible] = useState(false);
@@ -28,18 +28,25 @@ const Abbr = ({ text, className, highLightText }) => {
     }
   };
 
+  const clampStyle =
+    lines > 0
+      ? {
+          WebkitLineClamp: lines,
+          display: '-webkit-box',
+          '-webkit-box-orient': 'vertical',
+        }
+      : {};
+
   return (
     <Tooltip open={visible} onOpenChange={handleVisibleChange} title={text}>
       <span
         ref={spanRef}
         style={{
-          WebkitLineClamp: 1,
+          ...clampStyle,
           lineHeight: 'inherit',
-          display: '-webkit-box',
           overflow: 'hidden',
           whiteSpace: 'pre-wrap',
           wordBreak: 'break-all',
-          '-webkit-box-orient': 'vertical',
           hyphens: 'auto',
         }}
         className={className ?? ''}
