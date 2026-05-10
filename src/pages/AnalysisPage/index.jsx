@@ -21,6 +21,7 @@ import {
 import dayjs from 'dayjs';
 import * as XLSX from 'xlsx';
 import { API_BASE_URL } from '../../config/uploadModules';
+import LogTableList from './LogTableList';
 import './index.less';
 
 const { RangePicker } = DatePicker;
@@ -322,6 +323,9 @@ const AnalysisPage = () => {
               name="点击量"
               onExport={handleExportSubmit}
             />
+          </div>
+          <div className="table-wrapper" style={{ marginTop: 24 }}>
+            <LogTableList dataList={rawSubmitList} />
           </div>
         </Spin>
       </div>
