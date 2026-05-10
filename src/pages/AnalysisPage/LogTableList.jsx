@@ -1,12 +1,27 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { Table, Button, message } from 'antd';
+import { Table, Button, message, Popconfirm, Space } from 'antd';
+import {
+  LockOutlined,
+  UnlockOutlined,
+  DeleteOutlined,
+} from '@ant-design/icons';
+import dayjs from 'dayjs';
+import * as XLSX from 'xlsx';
 import { API_BASE_URL } from '../../config/uploadModules';
 import Abbr from '../../components/Abbr';
 
-const LogTableList = ({ dataList = [] }) => {
+const LogTableList = ({ dataList = [], onRefresh }) => {
   const [blackIps, setBlackIps] = useState([]);
   const [loadingIp, setLoadingIp] = useState(null);
+  const [deletingTimestamp, setDeletingTimestamp] = useState(null);
   const [pagination, setPagination] = useState({ current: 1, pageSize: 10 });
+  const [isMobile, setIsMobile] = useState(() => window.innerWidth <= 768);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const sortedData = useMemo(() => {
     return [...dataList].sort((a, b) => {
@@ -55,7 +70,7 @@ const LogTableList = ({ dataList = [] }) => {
               {
                 code: 'black_ips',
                 value: JSON.stringify(newBlackIps),
-                sort: 0,
+                sort: 99,
               },
             ],
           }),
@@ -75,10 +90,91 @@ const LogTableList = ({ dataList = [] }) => {
     [blackIps]
   );
 
+  const handleUnbanIp = useCallback(
+    async (ip) => {
+      if (!blackIps.includes(ip)) return;
+
+      setLoadingIp(ip);
+      const newBlackIps = blackIps.filter((b) => b !== ip);
+      try {
+        const res = await fetch(`${API_BASE_URL}/saudi-server/codeTable/save`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            items: [
+              {
+                code: 'black_ips',
+                value: JSON.stringify(newBlackIps),
+                sort: 99,
+              },
+            ],
+          }),
+        });
+        const data = await res.json();
+        if (!res.ok || !data.success || data.code !== 1) {
+          throw new Error(data.message || '保存失败');
+        }
+        message.success('解禁成功');
+        setBlackIps(newBlackIps);
+      } catch (err) {
+        message.error(`解禁失败: ${err.message}`);
+      } finally {
+        setLoadingIp(null);
+      }
+    },
+    [blackIps]
+  );
+
+  const handleDelete = useCallback(
+    async (timestamp) => {
+      setDeletingTimestamp(timestamp);
+      try {
+        const res = await fetch(`${API_BASE_URL}/saudi-server/log/delete`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ timestamp }),
+        });
+        const data = await res.json();
+        if (!res.ok || !data.success || data.code !== 1) {
+          throw new Error(data.message || '删除失败');
+        }
+        message.success('删除成功');
+        onRefresh && onRefresh();
+      } catch (err) {
+        message.error(`删除失败: ${err.message}`);
+      } finally {
+        setDeletingTimestamp(null);
+      }
+    },
+    [onRefresh]
+  );
+
+  const handleExport = () => {
+    if (!dataList || dataList.length === 0) {
+      message.warning('暂无数据可导出');
+      return;
+    }
+    const exportData = dataList.map((item) => ({
+      action: item.action,
+      timestamp: item.timestamp,
+      device: item.device,
+      ip: item.ip,
+      name: item.name,
+      company: item.company,
+      phone: item.phone,
+      email: item.email,
+      message: item.message,
+    }));
+    const ws = XLSX.utils.json_to_sheet(exportData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, '用户点击量详情');
+    XLSX.writeFile(wb, `用户点击量详情_${dayjs().format('YYYY-MM-DD')}.xlsx`);
+  };
+
   const columns = [
-    { title: 'Name', dataIndex: 'name', key: 'name', fixed: 'left', width: 100 },
-    { title: 'Company', dataIndex: 'company', key: 'company', fixed: 'left', width: 140 },
-    { title: 'Phone', dataIndex: 'phone', key: 'phone', fixed: 'left', width: 130 },
+    { title: 'Name', dataIndex: 'name', key: 'name', fixed: isMobile ? false : 'left', width: 100 },
+    { title: 'Company', dataIndex: 'company', key: 'company', fixed: isMobile ? false : 'left', width: 140 },
+    { title: 'Phone', dataIndex: 'phone', key: 'phone', fixed: isMobile ? false : 'left', width: 130 },
     { title: 'IP', dataIndex: 'ip', key: 'ip', width: 120 },
     { title: 'Email', dataIndex: 'email', key: 'email', width: 180 },
     {
@@ -95,25 +191,54 @@ const LogTableList = ({ dataList = [] }) => {
       width: 140,
       render: (device) => <Abbr text={device} />,
     },
-    { title: 'Timestamp', dataIndex: 'timestamp', key: 'timestamp', fixed: 'right', width: 160 },
+    { title: 'Timestamp', dataIndex: 'timestamp', key: 'timestamp', fixed: isMobile ? false : 'right', width: 160 },
     {
       title: '操作',
       key: 'operation',
-      fixed: 'right',
-      width: 100,
+      fixed: isMobile ? false : 'right',
+      width: 160,
       render: (_, record) => {
-        if (blackIps.includes(record.ip)) {
-          return <span style={{ color: '#ff4d4f' }}>被禁用</span>;
-        }
+        const isBanned = blackIps.includes(record.ip);
         return (
-          <Button
-            type="link"
-            danger
-            loading={loadingIp === record.ip}
-            onClick={() => handleBanIp(record.ip)}
-          >
-            禁用
-          </Button>
+          <Space size={4}>
+            {isBanned ? (
+              <Button
+                type="link"
+                size="small"
+                icon={<UnlockOutlined />}
+                loading={loadingIp === record.ip}
+                onClick={() => handleUnbanIp(record.ip)}
+              >
+                解禁
+              </Button>
+            ) : (
+              <Button
+                type="link"
+                size="small"
+                icon={<LockOutlined />}
+                loading={loadingIp === record.ip}
+                onClick={() => handleBanIp(record.ip)}
+              >
+                禁用
+              </Button>
+            )}
+            <Popconfirm
+              title="确认删除"
+              description="确定要删除这条记录吗？"
+              onConfirm={() => handleDelete(record.timestamp)}
+              okText="删除"
+              cancelText="取消"
+            >
+              <Button
+                type="link"
+                size="small"
+                icon={<DeleteOutlined />}
+                loading={deletingTimestamp === record.timestamp}
+              >
+                删除
+              </Button>
+            </Popconfirm>
+          </Space>
         );
       },
     },
@@ -121,6 +246,12 @@ const LogTableList = ({ dataList = [] }) => {
 
   return (
     <div className="log-table-list">
+      <div className="table-header">
+        <div className="table-title">用户点击量详情</div>
+        <Button type="link" onClick={handleExport}>
+          导出数据
+        </Button>
+      </div>
       <Table
         columns={columns}
         dataSource={sortedData}

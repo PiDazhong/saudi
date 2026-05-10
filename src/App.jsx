@@ -8,6 +8,7 @@ import CookieBanner from './components/CookieBanner';
 import LetsChat from './components/LetsChat';
 import HomePage from './pages/HomePage';
 import UploadGuard from './pages/UploadGuard';
+import AnalysisGuard from './pages/AnalysisGuard';
 import AnalysisPage from './pages/AnalysisPage';
 import PrivacyPage from './pages/PrivacyPage';
 import { useLang } from './context/LanguageContext';
@@ -59,7 +60,7 @@ function App() {
           }
         />
         <Route path="/upload" element={<ConfigProvider direction="ltr"><UploadGuard /></ConfigProvider>} />
-        <Route path="/analysis" element={<ConfigProvider direction="ltr"><AnalysisPage /></ConfigProvider>} />
+        <Route path="/analysis" element={<ConfigProvider direction="ltr"><AnalysisGuard /></ConfigProvider>} />
         <Route path="/privacy" element={<div className="app"><Header /><main><PrivacyPage /></main><Footer /></div>} />
       </Routes>
     </ConfigProvider>

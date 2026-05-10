@@ -233,6 +233,12 @@ const AnalysisPage = () => {
     setDates(vals);
   };
 
+  const handleRefresh = useCallback(() => {
+    if (dates && dates[0] && dates[1]) {
+      loadData(dates[0], dates[1]);
+    }
+  }, [dates, loadData]);
+
   const handleExportSubmit = () => {
     if (!rawSubmitList || rawSubmitList.length === 0) {
       message.warning('暂无数据可导出');
@@ -325,7 +331,7 @@ const AnalysisPage = () => {
             />
           </div>
           <div className="table-wrapper" style={{ marginTop: 24 }}>
-            <LogTableList dataList={rawSubmitList} />
+            <LogTableList dataList={rawSubmitList} onRefresh={handleRefresh} />
           </div>
         </Spin>
       </div>
